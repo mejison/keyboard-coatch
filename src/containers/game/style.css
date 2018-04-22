@@ -1,0 +1,15 @@
+canvas {
+    width : 800px;
+    height : 350px;
+    display: block;
+    margin: 0 auto;
+}
+
+textarea {
+    width : 800px;
+    height : 250px;
+}
+
+.currect {
+    background-color: yellow;
+}
