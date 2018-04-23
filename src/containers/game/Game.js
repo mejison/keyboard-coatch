@@ -23,7 +23,8 @@ class Game extends Component {
     let self = this
     api.getText()
       .then((data) => {
-        data = [data.pop()]
+        data = [data.pop()].join(' ')
+        this.text = data
         self.props.setTexts(data)
       })
     
@@ -32,12 +33,13 @@ class Game extends Component {
 
   keyboardListener() {
     document.addEventListener('keyup', (e) => {
-      let letter = String.fromCharCode(e.keyCode)
-      if (this.text[this.current].toLowerCase() == letter.toLowerCase()) {
+      let currentKey = this.text[this.current].toLowerCase()
+      if (currentKey == e.key) {
         this.current ++
         this.drawPlayers(this.current / this.text.length * 100)
+        let text = "<span class='currect'>" + this.text.slice(0, this.current) + '</span>' + this.text.slice(this.current, this.text.length)
+        this.props.setTexts(text) 
       }
-      console.log(this.current)
     })
   }
 
@@ -63,15 +65,12 @@ class Game extends Component {
     let { list } = this.props.games
     let { text } = this.props.texts
 
-    this.game = list.find(g => g.hash == hash);
-    this.text = text.join(' ')
-
+    this.game = list.find(g => g.hash == hash)
+    
     return (
       <div>
         <canvas id="battlefield"></canvas>
-        <div>
-          { this.text.split('').map((l, index) =>  l) }
-        </div>
+        <div dangerouslySetInnerHTML={{__html: text}}></div>
       </div>
     )
   }

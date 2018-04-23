@@ -4,7 +4,7 @@ const initialState = {
     text : []
 }
 
-export default function game(texts = initialState, action) {
+export default function texts(texts = initialState, action) {
     let text = Object.assign([], texts.text);
 
     switch (action.type) {
