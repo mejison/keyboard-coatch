@@ -13,7 +13,8 @@ class Home extends Component {
   }
 
   componentWillMount() {
-    let timer = setInterval(this.tick, 1000);
+    this.props.getGames();
+    // let timer = setInterval(this.tick, 1000);
   }
 
   tick() {
@@ -48,7 +49,7 @@ class Home extends Component {
                 </div>
               })
             }
-            <button onClick={() => {this.props.addGame({hash : new Date() * 1, timer : 60, name : 'New Game', hidden : false})}}>Add Game</button>  
+            <button onClick={() => {this.props.addGame()}}>Add Game</button>  
       </div>
     );
   }

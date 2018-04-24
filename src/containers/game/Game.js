@@ -6,6 +6,7 @@ import * as actions from '../../actions'
 import './style.css'
 import config from '../../config'
 import api from '../../api'
+import Cookies from 'js-cookie'
 
 class Game extends Component {
   
@@ -16,10 +17,13 @@ class Game extends Component {
   text = ""
 
   componentDidMount() {
+    let { hash } = this.props.match.params
+    this.props.setGame(hash);
+    this.joinPlayer(hash);
+    
     this.canvas = document.getElementById('battlefield')
     this.ctx = this.canvas.getContext('2d')
-    this.drawPlayers(10)
-
+    
     let self = this
     api.getText()
       .then((data) => {
@@ -28,7 +32,14 @@ class Game extends Component {
         self.props.setTexts(data)
       })
     
-    this.keyboardListener()
+    this.keyboardListener() 
+  }
+
+  joinPlayer(hash) {
+    if ( ! Cookies.get('join-game') || Cookies.get('join-game') != hash) {
+      Cookies.set('join-game', hash)
+      this.props.addPlayer({hash : hash, player : {name : 'Player New', car : 1}})
+    }
   }
 
   keyboardListener() {
@@ -61,12 +72,14 @@ class Game extends Component {
   }
 
   render() {
-    let { hash } = this.props.match.params
-    let { list } = this.props.games
     let { text } = this.props.texts
+    let { game } = this.props.games
 
-    this.game = list.find(g => g.hash == hash)
-    
+    if (game) {
+      this.game = game
+      this.drawPlayers(10)
+    }
+
     return (
       <div>
         <canvas id="battlefield"></canvas>
