@@ -4,35 +4,37 @@ import { bindActionCreators } from 'redux'
 import * as actions from '../../actions'
 import { routerMiddleware, push } from 'react-router-redux'
 import store from '../../store'
+import io from 'socket.io-client'
+import api from '../../api'
 
 class Home extends Component {
 
   constructor(props) {
     super(props)
-    this.tick = this.tick.bind(this)
   }
 
   componentWillMount() {
     this.props.getGames();
-    // let timer = setInterval(this.tick, 1000);
-  }
 
-  tick() {
-    const { list } = this.props.games
-    
-    list.map((g) => {
-      g.timer -= 1
-      if ( ! g.timer) {
-        this.props.hideGame({index : list.indexOf(g), hidden : true})
-        return
-      }
-      this.props.changeTimer({index : list.indexOf(g), timer : g.timer})
-    })
+    const socket = io.connect("http://localhost:4000")
+    socket.on('connect', () => {
+      socket.on('game:add', (data) => {
+        this.props.addGame(data.game)
+      });
+
+      socket.on('game:timer', (data) => {
+        this.props.updateTimer(data.game)
+      });
+    });
   }
 
   playGame(index) {
     const { list } = this.props.games
     store.dispatch(push('/game/' + list[index].hash))
+  }
+
+  addGame() {
+    api.addGame();
   }
 
   render() {
@@ -49,7 +51,7 @@ class Home extends Component {
                 </div>
               })
             }
-            <button onClick={() => {this.props.addGame()}}>Add Game</button>  
+            <button onClick={this.addGame}>Add Game</button>  
       </div>
     );
   }

@@ -16,6 +16,22 @@ export default function game(game = initialState, action) {
       return Object.assign({}, game, {
         game: action.value
       })
+    case types.UPDATE_TIMER:
+      list = list.map((g) => {
+        if (g.hash == action.value.hash) {
+          return Object.assign({}, g, { hidden: action.value.hidden, timer : action.value.timer })
+        }
+        return g
+      })
+      return Object.assign({}, game, { list })
+
+    case types.SET_TEXTS:
+      let current = Object.assign({}, game.game, {
+        text : action.value
+      });
+      return Object.assign({}, game, {
+        game: current
+      })
     case types.ADD_GAME:
       return Object.assign({}, game, {
         list: [...list, action.value ]

@@ -1,7 +1,6 @@
 import store from 'store'
 
 const API_URL = 'http://localhost:4000/api'
-const TEXT_API_URL = 'https://baconipsum.com/api/?type=meat-and-filler'
 
 const getAuthHeaders = () => {
 	return {
@@ -17,12 +16,6 @@ const responseHandler = (response) => {
 }
 
 export default {
-    getText(data) {
-        return fetch(TEXT_API_URL, {
-            method: 'get'
-        })
-        .then(responseHandler)
-    },
     getGames() {
         return fetch(API_URL + '/games', {
             headers: getAuthHeaders(),
